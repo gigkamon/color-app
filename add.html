@@ -6,43 +6,47 @@
     <title>กรอกข้อมูลการเดิมพัน</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
 </head>
-<body class="bg-gray-100 font-sans">
-    <div class="container mx-auto p-4 max-w-xl">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl p-8">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">📝 เพิ่มรายการเดิมพัน</h1>
-            <div class="space-x-2 text-sm">
-                <a href="settle.html" class="text-blue-600 hover:underline">ไปหน้าเฉลยผล →</a>
-                <a href="index.html" class="text-gray-600 hover:underline">หน้าแรก</a>
+            <h1 class="text-xl font-bold text-white flex items-center gap-2">📝 เพิ่มรายการ</h1>
+            <div class="space-x-3 text-sm">
+                <a href="settle.html" class="text-blue-400 hover:underline">เฉลยผล →</a>
+                <a href="index.html" class="text-slate-400 hover:underline">หน้าแรก</a>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <form id="bet-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">ชื่อผู้เล่น</label>
-                    <input type="text" id="username" required class="mt-1 w-full p-2 border rounded-md">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">เลือกฝั่ง</label>
-                    <select id="choice" class="mt-1 w-full p-2 border rounded-md">
-                        <option value="blue">น้ำเงิน (อัตราจ่าย 1 เท่า)</option>
-                        <option value="red">แดง (อัตราจ่าย 0.95 เท่า)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">จำนวนเงิน</label>
-                    <input type="number" id="amount" step="any" required class="mt-1 w-full p-2 border rounded-md">
-                </div>
-                <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">บันทึกข้อมูล</button>
-            </form>
-        </div>
+        <form id="bet-form" class="space-y-5">
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">ชื่อผู้เล่น</label>
+                <input type="text" id="username" required placeholder="ระบุชื่อผู้เล่น" 
+                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">เลือกฝั่ง</label>
+                <select id="choice" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition">
+                    <option value="blue">💧 น้ำเงิน (อัตราจ่าย 1 เท่า)</option>
+                    <option value="red">🔥 แดง (อัตราจ่าย 0.95 เท่า)</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">จำนวนเงิน</label>
+                <input type="number" id="amount" step="any" required placeholder="0.00" 
+                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3.5 rounded-xl transition shadow-lg shadow-blue-600/20">
+                บันทึกข้อมูล
+            </button>
+        </form>
     </div>
 
     <script>
         const SUPABASE_URL = 'YOUR_SUPABASE_URL';
         const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         document.getElementById('bet-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -50,7 +54,7 @@
             const choice = document.getElementById('choice').value;
             const amount = parseFloat(document.getElementById('amount').value);
 
-            let { data: userData } = await supabase
+            let { data: userData } = await db
                 .from('users')
                 .select('id')
                 .eq('name', username)
@@ -58,7 +62,7 @@
 
             let userId;
             if (!userData) {
-                const { data: newUser, error: createError } = await supabase
+                const { data: newUser, error: createError } = await db
                     .from('users')
                     .insert([{ name: username }])
                     .select('id')
@@ -69,7 +73,7 @@
                 userId = userData.id;
             }
 
-            const { error: betError } = await supabase
+            const { error: betError } = await db
                 .from('bets')
                 .insert([{ user_id: userId, choice: choice, amount: amount, result: 'pending', profit: 0 }]);
 
