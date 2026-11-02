@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กรอกข้อมูลการเดิมพัน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-4 max-w-xl">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">📝 เพิ่มรายการเดิมพัน</h1>
+            <div class="space-x-2 text-sm">
+                <a href="settle.html" class="text-blue-600 hover:underline">ไปหน้าเฉลยผล →</a>
+                <a href="index.html" class="text-gray-600 hover:underline">หน้าแรก</a>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <form id="bet-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">ชื่อผู้เล่น</label>
+                    <input type="text" id="username" required class="mt-1 w-full p-2 border rounded-md">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">เลือกฝั่ง</label>
+                    <select id="choice" class="mt-1 w-full p-2 border rounded-md">
+                        <option value="blue">น้ำเงิน (อัตราจ่าย 1 เท่า)</option>
+                        <option value="red">แดง (อัตราจ่าย 0.95 เท่า)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">จำนวนเงิน</label>
+                    <input type="number" id="amount" step="any" required class="mt-1 w-full p-2 border rounded-md">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">บันทึกข้อมูล</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.getElementById('bet-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const choice = document.getElementById('choice').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+
+            let { data: userData } = await supabase
+                .from('users')
+                .select('id')
+                .eq('name', username)
+                .single();
+
+            let userId;
+            if (!userData) {
+                const { data: newUser, error: createError } = await supabase
+                    .from('users')
+                    .insert([{ name: username }])
+                    .select('id')
+                    .single();
+                if (createError) { alert('เกิดข้อผิดพลาดในการสร้างผู้ใช้'); return; }
+                userId = newUser.id;
+            } else {
+                userId = userData.id;
+            }
+
+            const { error: betError } = await supabase
+                .from('bets')
+                .insert([{ user_id: userId, choice: choice, amount: amount, result: 'pending', profit: 0 }]);
+
+            if (betError) {
+                alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+            } else {
+                alert('บันทึกข้อมูลสำเร็จ!');
+                document.getElementById('bet-form').reset();
+            }
+        });
+    </script>
+</body>
+</html>
