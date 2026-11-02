@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบหลังบ้านแอดมิน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-4 max-w-2xl">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">🛠️ ระบบจัดการแอดมิน</h1>
+            <a href="index.html" class="text-blue-600 hover:underline text-sm">← กลับหน้าแรก</a>
+        </div>
+
+        <!-- ฟอร์มเพิ่มรายการเดิมพัน -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-lg font-semibold mb-4">เพิ่มรายการเดิมพันใหม่</h2>
+            <form id="bet-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">ชื่อผู้เล่น</label>
+                    <input type="text" id="username" required class="mt-1 w-full p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">เลือกฝั่ง</label>
+                    <select id="choice" class="mt-1 w-full p-2 border rounded-md">
+                        <option value="blue">น้ำเงิน (อัตราจ่าย 1 เท่า)</option>
+                        <option value="red">แดง (อัตราจ่าย 0.95 เท่า)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">จำนวนเงิน</label>
+                    <input type="number" id="amount" step="any" required class="mt-1 w-full p-2 border rounded-md">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">บันทึกข้อมูล</button>
+            </form>
+        </div>
+
+        <!-- ส่วนประมวลผลแพ้/ชนะ (ออกผล) -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-lg font-semibold mb-4">ประกาศผลรางวัลรอบล่าสุด</h2>
+            <div class="flex gap-4">
+                <button onclick="processGame('blue')" class="flex-1 bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 font-bold">ออกน้ำเงิน (Blue Win)</button>
+                <button onclick="processGame('red')" class="flex-1 bg-red-600 text-white p-3 rounded-md hover:bg-red-700 font-bold">ออกแดง (Red Win)</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
