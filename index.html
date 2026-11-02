@@ -9,28 +9,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen">
+<body class="bg-slate-50 text-slate-800 min-h-screen">
     <div class="max-w-4xl mx-auto px-4 py-8">
         <!-- Header -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div>
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2">
-                    📊 <span class="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">ตารางผลการเดิมพัน</span>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+                    📊 <span class="text-blue-600">ตารางผลการเดิมพัน</span>
                 </h1>
-                <p class="text-slate-400 text-sm mt-1">อัปเดตสถานะและผลกำไรแบบเรียลไทม์</p>
+                <p class="text-slate-500 text-sm mt-1">อัปเดตสถานะและผลกำไรแบบเรียลไทม์</p>
             </div>
             <div class="flex items-center gap-3 w-full sm:w-auto">
-                <a href="add.html" class="flex-1 sm:flex-none text-center bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition shadow-lg shadow-blue-600/20">➕ กรอกข้อมูล</a>
-                <a href="settle.html" class="flex-1 sm:flex-none text-center bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl font-medium text-sm transition border border-slate-700">🏆 หน้าเฉลยผล</a>
+                <a href="add.html" class="flex-1 sm:flex-none text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition shadow-sm">➕ กรอกข้อมูล</a>
+                <a href="settle.html" class="flex-1 sm:flex-none text-center bg-white hover:bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl font-medium text-sm transition border border-slate-300 shadow-sm">🏆 หน้าเฉลยผล</a>
             </div>
         </div>
 
         <!-- Table Card -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-slate-800/50 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
+                        <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
                             <th class="p-4 font-semibold">ชื่อผู้เล่น</th>
                             <th class="p-4 font-semibold">ฝั่งที่ลง</th>
                             <th class="p-4 font-semibold">จำนวนเงิน</th>
@@ -38,8 +38,8 @@
                             <th class="p-4 font-semibold text-right">กำไร / ขาดทุน</th>
                         </tr>
                     </thead>
-                    <tbody id="bet-table-body" class="divide-y divide-slate-800/60 text-sm">
-                        <tr><td colspan="5" class="p-8 text-center text-slate-500">กำลังโหลดข้อมูล...</td></tr>
+                    <tbody id="bet-table-body" class="divide-y divide-slate-100 text-sm">
+                        <tr><td colspan="5" class="p-8 text-center text-slate-400">กำลังโหลดข้อมูล...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -59,39 +59,39 @@
                 .order('created_at', { ascending: false });
 
             if (error || !data) {
-                tableBody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-rose-400">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-rose-600">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
                 return;
             }
 
             if (data.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">ยังไม่มีข้อมูลการลงเดิมพันในระบบ</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-400">ยังไม่มีข้อมูลการลงเดิมพันในระบบ</td></tr>';
                 return;
             }
 
             tableBody.innerHTML = '';
             data.forEach(bet => {
                 const row = document.createElement('tr');
-                row.className = 'hover:bg-slate-800/40 transition';
+                row.className = 'hover:bg-slate-50 transition';
 
                 let badge = bet.choice === 'blue' 
-                    ? '<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">💧 น้ำเงิน (1x)</span>' 
-                    : '<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">🔥 แดง (0.95x)</span>';
+                    ? '<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">💧 น้ำเงิน (1x)</span>' 
+                    : '<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">🔥 แดง (0.95x)</span>';
                 
-                let resultBadge = '<span class="text-slate-500">รอดำเนินการ</span>';
-                if (bet.result === 'win') resultBadge = '<span class="text-emerald-400 font-medium">ชนะ (เต็ม)</span>';
-                else if (bet.result === 'win_half') resultBadge = '<span class="text-emerald-500 font-medium">ชนะ (ครึ่ง)</span>';
-                else if (bet.result === 'draw') resultBadge = '<span class="text-amber-400 font-medium">เสมอ (คืนทุน)</span>';
-                else if (bet.result === 'lose_half') resultBadge = '<span class="text-orange-400 font-medium">แพ้ (ครึ่ง)</span>';
-                else if (bet.result === 'lose') resultBadge = '<span class="text-rose-500 font-medium">แพ้ (เต็ม)</span>';
+                let resultBadge = '<span class="text-slate-400">รอดำเนินการ</span>';
+                if (bet.result === 'win') resultBadge = '<span class="text-emerald-600 font-semibold">ชนะ (เต็ม)</span>';
+                else if (bet.result === 'win_half') resultBadge = '<span class="text-emerald-600 font-semibold">ชนะ (ครึ่ง)</span>';
+                else if (bet.result === 'draw') resultBadge = '<span class="text-amber-600 font-semibold">เสมอ (คืนทุน)</span>';
+                else if (bet.result === 'lose_half') resultBadge = '<span class="text-orange-600 font-semibold">แพ้ (ครึ่ง)</span>';
+                else if (bet.result === 'lose') resultBadge = '<span class="text-rose-600 font-semibold">แพ้ (เต็ม)</span>';
 
                 let profitFormatted = Number(bet.profit || 0).toLocaleString();
-                let profitClass = bet.profit > 0 ? 'text-emerald-400 font-semibold' : (bet.profit < 0 ? 'text-rose-400 font-semibold' : 'text-slate-400');
+                let profitClass = bet.profit > 0 ? 'text-emerald-600 font-bold' : (bet.profit < 0 ? 'text-rose-600 font-bold' : 'text-slate-600');
                 if (bet.profit > 0) profitFormatted = '+' + profitFormatted;
 
                 row.innerHTML = `
-                    <td class="p-4 font-medium text-white">${bet.users ? bet.users.name : 'ไม่ระบุชื่อ'}</td>
+                    <td class="p-4 font-medium text-slate-900">${bet.users ? bet.users.name : 'ไม่ระบุชื่อ'}</td>
                     <td class="p-4">${badge}</td>
-                    <td class="p-4 text-slate-300">${Number(bet.amount).toLocaleString()}</td>
+                    <td class="p-4 text-slate-600">${Number(bet.amount).toLocaleString()}</td>
                     <td class="p-4">${resultBadge}</td>
                     <td class="p-4 text-right ${profitClass}">${profitFormatted}</td>
                 `;
